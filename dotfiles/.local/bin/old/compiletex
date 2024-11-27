@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]; then
+	rm aux_files/*
+	rm Document.pdf
+	xelatex --undump=xelatex --output-directory=./aux_files Document.tex
+	bibtex ./aux_files/Document
+	makeglossaries -d aux_files Document
+	yourfilenames=`ls aux_files/*.idx`
+	for eachfile in $yourfilenames; do
+		texindy -L french -I xelatex -M input_files/index_style $eachfile
+	done
+	xelatex --undump=xelatex --output-directory=./aux_files Document.tex
+	xelatex --undump=xelatex --output-directory=./aux_files Document.tex
+	mv aux_files/Document.pdf ./
+elif [ $1 = '-c' ]; then
+	rm aux_files/*
+else
+	echo "Argument inconnu"
+fi

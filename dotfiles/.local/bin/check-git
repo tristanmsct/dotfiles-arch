@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# Liste des repos à checker.
+# Il faut utiliser le chemin complet, la notation '~' ne fonctionne pas.
+
+# Main repo, config files and such.
+#lst_repos=("/home/tristan/Documents/dotfiles ")
+
+# The main hub for repos.
+base_repos="/home/tristan/Nextcloud/02-Projets/01-Repos"
+lst_repos=$(ls -d ${base_repos}/*/)
+
+# Other repos.
+lst_repos+=("/home/tristan/Nextcloud/01-Travail/05-OpenClassrooms/01-Projets"
+	"/home/tristan/Nextcloud/01-Travail/05-OpenClassrooms/98-OCManager")
+
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+for repo in ${lst_repos[@]}; do
+
+	# On se déplace dans l'ensemble des repos à tester car on ne peut pas lancer de commande
+	# git depuis l'exterieur d'un repo.
+	# L'update est nécessaire pour obtenir les changements remote.
+	cd $repo
+	git remote update &> /dev/null
+
+	# On split le chemin du repo par '/' pour pouvoir ne garder que le dernier morceaux, ça permet d'avoir un affichage
+	# plus propre à la fin sans le chemin complet.
+	path_repo=(${repo//\// })
+	repo_dir=${path_repo[${#path_repo[@]} - 1]}
+
+	# La variable clean est initialisée à 0 et incrémentée en fonction du status du repo.
+	# Changement local -> +1
+	# Changement remote -> +2
+	# Ca permet d'avoir 4 combinaisons possibles pour le status du repo.
+	clean=0
+	status=$(git status)
+
+	if ! (git status|grep -q "working tree clean"); then clean=$((clean+1)); fi;
+	if (git status|grep -q "Your branch is behind"); then clean=$((clean+2)); fi;
+
+	case "$clean" in
+
+	0) echo -e "Repo $repo_dir est à jour."
+	    ;;
+	1) echo -e "Repo $repo_dir a des changements ${BLUE}locaux${NC}."
+	    ;;
+	2) echo -e "Repo $repo_dir a des changements ${ORANGE}remote${NC}."
+	    ;;
+	3) echo -e "Repo $repo_dir a des changements ${BLUE}locaux${NC} et ${ORANGE}remote${NC}."
+	   ;;
+	*) echo "Bug."
+	   ;;
+	esac
+
+done

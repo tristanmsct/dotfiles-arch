@@ -1,0 +1,6 @@
+#!/bin/bash
+python -c '
+from datetime import datetime
+now_date = datetime.now().strftime("%a %b %d %H:%M:%S %Y")
+print(f"#!/usr/bin/env python3 \n\"\"\"\nCreated on {now_date}.\n\n@author: Tristan Muscat\n\"\"\"\n\n")
+' | xclip -r -selection c

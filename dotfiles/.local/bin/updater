@@ -1,0 +1,93 @@
+#!/bin/bash
+
+# Get the script name.
+script_name=$(basename "$0")
+
+# Message to be displayed as help.
+show_help() {
+    echo "Usage: $script_name [-u | --upgrade-type] [-c | --clean] [-f | --full] [--help]"
+    echo "Perform update tasks."
+    echo
+    echo "Options:"
+    echo "  -u, --upgrade-type TYPE     Specify upgrade type (normal, dist, full)."
+    echo "  -c, --clean                 Run the clean operation."
+    echo "  -f, --full                  Performs a dist-upgrad + clean up."
+    echo "  --help                      Display this help message."
+    exit 0
+}
+
+# Default values. By default we perform a normal upgrade, and no clean up.
+upgrade_type="normal"
+cleanup=false
+
+# Use getopt to parse options. See differences between getopt, getopts, etc.
+OPTIONS=$(getopt -q -o u:cf -l upgrade-type:,cleanup,full,help -- "$@")
+if [ $? -ne 0 ]; then
+    echo "$script_name: invalid option"
+    echo "Try '$script_name --help' for more information."
+    exit 1
+fi
+
+# Re-evaluate positional parameters with parsed options.
+eval set -- "$OPTIONS"
+
+# Handle all options untill none are left.
+while true; do
+    case "$1" in
+        -u | --upgrade-type)
+            upgrade_type="$2"
+            shift 2
+            ;;
+        -c | --cleanup)
+            cleanup=true
+            shift
+            ;;
+        -f | --full)
+            upgrade_type="dist"
+            cleanup=true
+            shift
+            ;;
+        --help)
+            show_help
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            exit 1
+            ;;
+    esac
+done
+
+# Here we handle unexepected arguments. There should be none.
+if [ "$#" -ne 0 ]; then
+    echo "$script_name: invalid argument(s) -- $*"
+    echo "Try '$script_name --help' for more information."
+    exit 1
+fi
+
+# Finally we perform the desired update.
+case "$upgrade_type" in
+    normal)
+        sudo apt update
+        sudo apt upgrade -y
+        ;;
+    dist)
+        sudo apt update
+        sudo apt dist-upgrade -y
+        ;;
+    full)
+        sudo apt update
+        sudo apt full-upgrade -y
+        ;;
+    *)
+        echo "Error: Invalid upgrade type '$upgrade_type'. Valid options are 'normal', 'dist', or 'full'."
+        exit 1
+        ;;
+esac
+
+if [ "$cleanup" = true ]; then
+    sudo apt autoremove -y
+    sudo apt autoclean
+fi

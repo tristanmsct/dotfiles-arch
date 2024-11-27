@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Check connected monitors
+connected_monitors=$(hyprctl monitors | grep "Monitor" | wc -l)
+
+if [[ $connected_monitors -eq 2 ]]; then
+    hyprctl keyword monitor "eDP-1, preferred, auto, 1"
+    hyprctl keyword monitor "DP-2, 1920x1080@60Hz, 0x-400, 1"
+else
+    hyprctl keyword monitor "eDP-1, preferred, auto, 1"
+fi
