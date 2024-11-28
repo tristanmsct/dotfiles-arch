@@ -4,11 +4,11 @@
 # Il faut utiliser le chemin complet, la notation '~' ne fonctionne pas.
 
 # Main repo, config files and such.
-#lst_repos=("/home/tristan/Documents/dotfiles ")
+lst_repos=("/home/tristan/Documents/archdots ")
 
 # The main hub for repos.
 base_repos="/home/tristan/Nextcloud/02-Projets/01-Repos"
-lst_repos=$(ls -d ${base_repos}/*/)
+lst_repos+=$(ls -d ${base_repos}/*/)
 
 # Other repos.
 lst_repos+=("/home/tristan/Nextcloud/01-Travail/05-OpenClassrooms/01-Projets"

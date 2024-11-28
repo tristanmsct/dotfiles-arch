@@ -33,7 +33,6 @@ source $ZSH/oh-my-zsh.sh
 source <(fzf --zsh)
 
 # zsh history
-HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 setopt appendhistory
@@ -45,3 +44,23 @@ eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
 
 # Shipped Theme
 # eval "$(oh-my-posh init zsh --config /usr/share/oh-my-posh/themes/agnoster.omp.json)"
+
+# -----------------------------------------------------
+# Custom Scripts
+# -----------------------------------------------------
+export PATH="$HOME/.local/bin:$PATH"
+
+# -----------------------------------------------------
+# Tools
+# -----------------------------------------------------
+[[ -s /usr/share/autojump/autojump.zsh ]] && . /usr/share/autojump/autojump.zsh
+eval $(thefuck --alias)
+eval "$(ssh-agent)" &>/dev/null
+eval "$(task --completion zsh)"
+
+# -----------------------------------------------------
+# Terminal Keybinds
+# -----------------------------------------------------
+#bindkey "^?" backward-kill-word
+bindkey "^?" backward-delete-char    # Backspace deletes a single character
+bindkey "^W" backward-kill-word     # Ctrl + W (or remapped Ctrl + Backspace) deletes a word
