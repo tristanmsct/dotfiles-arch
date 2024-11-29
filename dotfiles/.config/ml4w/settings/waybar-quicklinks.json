@@ -5,9 +5,9 @@
         "tooltip-format": "Open Chromium"
     }, 
     "custom/quicklink2": {
-        "format": "",
+        "format": "",
         "on-click": "~/.config/ml4w/settings/browser.sh",
-        "tooltip-format": "Open Firefox"
+        "tooltip-format": "Open Brave"
     },
     "custom/quicklink3": {
         "format": "",
