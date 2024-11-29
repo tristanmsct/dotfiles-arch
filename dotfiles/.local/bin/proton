@@ -1,20 +1,23 @@
 #!/bin/bash
 
+sudo systemctl start systemd-resolved.service
+
 if [[ -z $1 ]]; then
-    wg-quick up pvpn-fr
+    echo "Usage: $script_name [fr|uk|down]"
+    exit 1
 else
     case $1 in
 
         fr)
-            wg-quick up pvpn-fr
+            sudo wg-quick up pvpn-fr
             ;;
         uk)
-            wg-quick up pvpn-uk
+            sudo wg-quick up pvpn-uk
             ;;
         down)
-			interface=$(sudo wg | grep interface | awk '{print $2}')
-			wg-quick down $interface
-			;;
+            interface=$(sudo wg | grep interface | awk '{print $2}')
+            sudo wg-quick down $interface
+            ;;
         *)
             echo "Commande inconnue."
             ;;

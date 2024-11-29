@@ -18,8 +18,8 @@ echo -e "${GREEN}"
 figlet -f smslant "SDDM Wallpaper"
 echo -e "${NONE}"
 
-sddm_theme_name="sequoia"
-sddm_asset_folder="/usr/share/sddm/themes/$sddm_theme_name/backgrounds"
+sddm_theme_name="eucalyptus-drop"
+sddm_asset_folder="/usr/share/sddm/themes/$sddm_theme_name/Backgrounds"
 
 sddm_theme_tpl="/usr/share/ml4w-hyprland/sddm/theme.conf"
 if [ -f $HOME/.config/ml4w/settings/sddm/theme.conf ]; then
@@ -55,7 +55,7 @@ echo
 echo ":: You can preview your updated SDDM Login screen. (Close it with SUPER+Q)"
 echo
 if gum confirm "Do you want to preview the result?"; then
-    sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/sequoia
+    sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/eucalyptus-drop
 fi
 
 echo

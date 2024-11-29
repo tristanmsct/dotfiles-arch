@@ -27,6 +27,8 @@ plugins=(
 # Set-up oh-my-zsh
 source $ZSH/oh-my-zsh.sh
 
+autoload -U compinit && compinit -d "$XDG_CACHE_HOME"/zsh/zcompdump-"$ZSH_VERSION"
+
 # -----------------------------------------------------
 # Set-up FZF key bindings (CTRL R for fuzzy history finder)
 # -----------------------------------------------------
@@ -56,7 +58,6 @@ export PATH="$HOME/.local/bin:$PATH"
 [[ -s /usr/share/autojump/autojump.zsh ]] && . /usr/share/autojump/autojump.zsh
 eval $(thefuck --alias)
 eval "$(ssh-agent)" &>/dev/null
-eval "$(task --completion zsh)"
 
 # -----------------------------------------------------
 # Terminal Keybinds
@@ -64,3 +65,14 @@ eval "$(task --completion zsh)"
 #bindkey "^?" backward-kill-word
 bindkey "^?" backward-delete-char    # Backspace deletes a single character
 bindkey "^W" backward-kill-word     # Ctrl + W (or remapped Ctrl + Backspace) deletes a word
+
+# -----------------------------------------------------
+# Completion Scripts
+# -----------------------------------------------------
+if [ -f ~/.config/zsh/completion.bash ]; then
+    source ~/.config/zsh/completion.bash
+fi
+
+if [ -f ~/.config/zsh/task_completion.zsh ]; then
+    source ~/.config/zsh/task_completion.zsh
+fi

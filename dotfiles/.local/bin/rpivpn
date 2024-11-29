@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [[ -z $1 ]]; then
+    echo "Usage: $script_name [up|down]"
+    exit 1
+else
+    case $1 in
+
+        up)
+            nmcli connection up Asnieres
+            ;;
+        down)
+            nmcli connection down Asnieres
+            ;;
+        *)
+            echo "Commande inconnue."
+            ;;
+    esac
+fi

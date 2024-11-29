@@ -1,0 +1,18 @@
+#!/bin/bash
+
+CONFIG=$1
+CONFIG_PATH=~/.config/hypr/conf/monitors
+script_name=$(basename "$0")
+
+if [[ $CONFIG == "mono" ]]; then
+    cp $CONFIG_PATH/mono.conf $CONFIG_PATH/default.conf
+elif [[ $CONFIG == "multi" ]]; then
+    cp $CONFIG_PATH/multi.conf $CONFIG_PATH/default.conf
+else
+    echo "Usage: $script_name [mono|multi]"
+    exit 1
+fi
+
+sleep 1
+# Reload Hyprland configuration
+hyprctl reload
