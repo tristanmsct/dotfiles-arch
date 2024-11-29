@@ -206,7 +206,7 @@
 
   // Clock
   "clock": {
-        "format": "{:%H:%M - %a %Od.%Om.%y}",
+        "format": "{:%H:%M - %a}",
     "on-click": "ags toggle calendar",
     "tooltip": false
   },
