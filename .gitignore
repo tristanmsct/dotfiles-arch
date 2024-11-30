@@ -1,1 +1,4 @@
 dotfiles/.config/ml4w/cache/*
+
+# This file is overwritten by a script whenever we want to change display configuration so it changes constantly.
+dotfiles/.config/hypr/conf/monitors/default.conf

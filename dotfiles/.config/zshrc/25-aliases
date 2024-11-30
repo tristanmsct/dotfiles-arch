@@ -20,7 +20,7 @@ alias vim='$EDITOR'
 alias ts='~/.config/ml4w/scripts/snapshot.sh'
 alias wifi='nmtui'
 alias cleanup='~/.config/ml4w/scripts/cleanup.sh'
-alias ccat='pygmentize -g'
+alias ccat='highlight -O ansi'
 
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
