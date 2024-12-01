@@ -4,15 +4,56 @@ CONFIG=$1
 CONFIG_PATH=~/.config/hypr/conf/monitors
 script_name=$(basename "$0")
 
-if [[ $CONFIG == "mono" ]]; then
-    cp $CONFIG_PATH/mono.conf $CONFIG_PATH/default.conf
-elif [[ $CONFIG == "multi" ]]; then
-    cp $CONFIG_PATH/multi.conf $CONFIG_PATH/default.conf
-else
-    echo "Usage: $script_name [mono|multi]"
+# Function to count connected monitors.
+count_monitors() {
+    hyprctl monitors | grep "Monitor" | wc -l
+}
+
+
+# Function to get monitor label by name.
+get_monitor_label_by_name() {
+    local monitor_name="$1"
+    hyprctl monitors | awk -v name="$monitor_name" '
+        $0 ~ "Monitor" { monitor = $2 }
+        $0 ~ "description: " name { print monitor }
+    '
+}
+
+
+if [[ -z $1 ]]; then
+    echo "Usage: $script_name [mono|multi|main-off]"
     exit 1
+else
+    case $1 in
+        mono)
+            cp $CONFIG_PATH/mono.conf $CONFIG_PATH/default.conf
+            sleep 1
+            hyprctl reload
+            ;;
+        multi)
+            cp $CONFIG_PATH/multi.conf $CONFIG_PATH/default.conf
+
+            monitor_desc="Acer Technologies QG241Y TLAEE001854A"
+            monitor_label=$(get_monitor_label_by_name "$monitor_desc")
+
+            sed -i "s|SECONDARY_MONITOR_LABEL|$monitor_label|g" $CONFIG_PATH/default.conf
+
+            sleep 1
+            hyprctl reload
+            ;;
+        main-off)
+            if [[ $(count_monitors) -ge 2 ]]; then
+                hyprctl keyword monitor eDP-1,disable
+                exit 1
+            else
+                echo "Cannot disable the main monitor: need at least another one."
+                exit 1
+            fi
+            ;;
+        *)
+            echo "Unknown command."
+            ;;
+    esac
 fi
 
-sleep 1
-# Reload Hyprland configuration
-hyprctl reload
+

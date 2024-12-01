@@ -1,0 +1,26 @@
+#!/bin/bash
+
+script_name=$(basename "$0")
+
+if [[ -z $1 ]]; then
+    echo "Usage: $script_name [cava|aqua|matrix|bonsai]"
+    exit 1
+else
+    case $1 in
+        cava)
+            cava -p ~/.config/cava/config-custom
+            ;;
+        aqua)
+            asciiquarium
+            ;;
+        matrix)
+            cmatrix -s
+            ;;
+        bonsai)
+            bonsai.sh -li
+            ;;
+        *)
+            echo "Unknown command."
+            ;;
+    esac
+fi
