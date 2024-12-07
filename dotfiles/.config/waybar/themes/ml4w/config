@@ -36,12 +36,12 @@
 
     // Modules Center
     "modules-center": [
+        "custom/vpnstatus",
         "hyprland/workspaces"
     ],
 
     // Modules Right    
     "modules-right": [
-        "custom/vpnstatus",
         // "custom/updates",
         "pulseaudio",
         //"backlight",
