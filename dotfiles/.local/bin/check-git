@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Liste des repos à checker.
-# Il faut utiliser le chemin complet, la notation '~' ne fonctionne pas.
+# List of repos to check.
+# Paths need to be absolute, the ~ notation does not work.
 
 # Main repo, config files and such.
 lst_repos=("/home/tristan/Documents/archdots ")
@@ -12,47 +12,48 @@ lst_repos+=$(ls -d ${base_repos}/*/)
 
 # Other repos.
 lst_repos+=("/home/tristan/Nextcloud/01-Travail/05-OpenClassrooms/01-Projets"
-	"/home/tristan/Nextcloud/01-Travail/05-OpenClassrooms/98-OCManager")
+    "/home/tristan/Nextcloud/01-Travail/05-OpenClassrooms/98-OCManager")
 
-ORANGE='\033[0;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+ORANGE='\033[38;2;255;158;23m'
+BLUE='\033[38;2;73;136;252m'
+PURPLE='\033[38;2;150;85;166m'
+GREEN='\033[38;2;125;235;103m'
+NC='\033[0m'
 
 for repo in ${lst_repos[@]}; do
 
-	# On se déplace dans l'ensemble des repos à tester car on ne peut pas lancer de commande
-	# git depuis l'exterieur d'un repo.
-	# L'update est nécessaire pour obtenir les changements remote.
-	cd $repo
-	git remote update &> /dev/null
+    # We go from repo to repo because we cannot run git commands from outside.
+    # The update is necessary to get the changes.
+    cd $repo
+    git remote update &> /dev/null
 
-	# On split le chemin du repo par '/' pour pouvoir ne garder que le dernier morceaux, ça permet d'avoir un affichage
-	# plus propre à la fin sans le chemin complet.
-	path_repo=(${repo//\// })
-	repo_dir=${path_repo[${#path_repo[@]} - 1]}
+    # Splitting the path by '/' to keep only the last bit, this gives a more readable display at the end.
+    path_repo=(${repo//\// })
+    repo_dir=${path_repo[${#path_repo[@]} - 1]}
 
-	# La variable clean est initialisée à 0 et incrémentée en fonction du status du repo.
-	# Changement local -> +1
-	# Changement remote -> +2
-	# Ca permet d'avoir 4 combinaisons possibles pour le status du repo.
-	clean=0
-	status=$(git status)
+    # The `clean` variable is initialised with a value of 0 and incremented depending of the repos status.
+    # Local changes -> +1
+    # Remote changes -> +2
+    # This gives four different possible states for the repo.
+    clean=0
+    status=$(git status)
 
-	if ! (git status|grep -q "working tree clean"); then clean=$((clean+1)); fi;
-	if (git status|grep -q "Your branch is behind"); then clean=$((clean+2)); fi;
+    if ! (git status|grep -q "working tree clean"); then clean=$((clean+1)); fi;
+    if (git status|grep -q "Your branch is behind"); then clean=$((clean+2)); fi;
 
-	case "$clean" in
+    case "$clean" in
 
-	0) echo -e "Repo $repo_dir est à jour."
-	    ;;
-	1) echo -e "Repo $repo_dir a des changements ${BLUE}locaux${NC}."
-	    ;;
-	2) echo -e "Repo $repo_dir a des changements ${ORANGE}remote${NC}."
-	    ;;
-	3) echo -e "Repo $repo_dir a des changements ${BLUE}locaux${NC} et ${ORANGE}remote${NC}."
-	   ;;
-	*) echo "Bug."
-	   ;;
-	esac
+        0) echo -e "Repo ${PURPLE}$repo_dir${NC} is ${GREEN}up to date${NC}."
+            ;;
+        1) echo -e "Repo ${PURPLE}$repo_dir${NC} has ${BLUE}local${NC} changes."
+            ;;
+        2) echo -e "Repo ${PURPLE}$repo_dir${NC} has ${ORANGE}remote${NC} changes."
+            ;;
+        3) echo -e "Repo ${PURPLE}$repo_dir${NC} has ${BLUE}local${NC} and ${ORANGE}remote${NC} changes."
+        ;; 
+        *) echo "🍞 Something went really wrong."
+        ;;
+
+    esac
 
 done
