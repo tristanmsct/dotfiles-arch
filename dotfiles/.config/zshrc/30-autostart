@@ -11,7 +11,16 @@ cat ~/.cache/wal/sequences
 # Fastfetch
 # -----------------------------------------------------
 if [[ $(tty) == *"pts"* ]]; then
-    fastfetch --config examples/13
+    # Get terminal dimensions.
+    width=$(tput cols)
+    height=$(tput lines)
+    
+    # Use a different template based on size.
+    if (( width >= 110 && height >= 40 )); then
+        fastfetch
+    else
+        fastfetch --config examples/13
+    fi
 else
     echo
     if [ -f /bin/qtile ]; then
