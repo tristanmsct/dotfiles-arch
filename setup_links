@@ -1,0 +1,18 @@
+#!/bin/bash
+
+mkdir -p /home/tristan/.ssh
+mkdir -p /home/tristan/.config/cava
+mkdir -p /home/tristan/.config/zsh
+
+ln -sf /home/tristan/Documents/archdots/dotfiles/.bashrc /home/tristan/.bashrc
+ln -sf /home/tristan/Documents/archdots/dotfiles/.ssh/config /home/tristan/.ssh/config
+
+ln -sf /home/tristan/Documents/archdots/dotfiles/.config/cava/config-custom /home/tristan/.config/cava/config-custom
+ln -sf /home/tristan/Documents/archdots/dotfiles/.config/git /home/tristan/.config/git
+ln -sf /home/tristan/Documents/archdots/dotfiles/.config/gtk-2.0 /home/tristan/.config/gtk-2.0
+ln -sf /home/tristan/Documents/archdots/dotfiles/.config/Nextcloud/sync-exclude.lst /home/tristan/.config/Nextcloud/sync-exclude.lst
+ln -sf /home/tristan/Documents/archdots/dotfiles/.config/python /home/tristan/.config/python
+ln -sf /home/tristan/Documents/archdots/dotfiles/.config/Typora/themes/base.user.css /home/tristan/.config/Typora/themes/base.user.css
+ln -sf /home/tristan/Documents/archdots/dotfiles/.config/zsh/.zshrc /home/tristan/.config/zsh/.zshrc
+ln -sf /home/tristan/Documents/archdots/dotfiles/.config/zsh/completion.bash /home/tristan/.config/zsh/completion.bash
+ln -sf /home/tristan/Documents/archdots/dotfiles/.config/zsh/task_completion.zsh /home/tristan/.config/zsh/task_completion.zsh
