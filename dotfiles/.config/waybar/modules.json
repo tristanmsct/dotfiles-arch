@@ -382,5 +382,12 @@
       ""
     ],
     "scroll-step": 1
+  },
+
+  // VPN
+  "custom/vpnstatus": {
+    "exec": "~/.config/ml4w/scripts/vpnstatus.sh",
+    "interval": 5,
+    "return-type": "json"
   }
 }

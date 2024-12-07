@@ -4,24 +4,47 @@ script_name=$(basename "$0")
 
 sudo systemctl start systemd-resolved.service
 
+# The logic :
+# we don't do anything if already connected to my raspberry pi VPN through Wireguard.
+#
+# Then if we ask up, we check if we are already connected because if we are, proton does not check, connect twice and then its
+# a bitch to disconnect, so we only connect if we are not connected yet.
+#
+# The rest is self explenatory.
 if [[ -z $1 ]]; then
-    echo "Usage: $script_name [fr|uk|down]"
+    echo "Usage: $script_name [up <country>|down|status]"
     exit 1
 else
-    case $1 in
-
-        fr)
-            sudo wg-quick up pvpn-fr
-            ;;
-        uk)
-            sudo wg-quick up pvpn-uk
-            ;;
-        down)
-            interface=$(sudo wg | grep interface | awk '{print $2}')
-            sudo wg-quick down $interface
-            ;;
-        *)
-            echo "Unknown command."
-            ;;
-    esac
+    interface=$(sudo wg | grep interface | awk '{print $2}')
+    if [[ $interface == Asnieres ]]; then
+        echo "Already connected through Wireguard"
+    else
+        case $1 in
+            up)
+                if [[ $interface == pvpn-* ]]; then
+                    echo "Already connected to $interface"
+                else
+                    sudo wg-quick up pvpn-$2
+                fi
+                ;;
+            down)
+                interface=$(sudo wg | grep interface | awk '{print $2}')
+                sudo wg-quick down $interface
+                ;;
+            status)
+                if [[ $interface == "" ]]; then
+                    echo "VPN disconnected"
+                else
+                    echo "VPN connected to $interface"
+                fi
+                ;;
+            *)
+                echo "Unknown command."
+                echo "Usage: $script_name [up <country>|down|status]"
+                ;;
+        esac
+    fi
 fi
+
+# We write in the .conf/vpnstatus file the current status so it can be displayed in waybar.
+vpnstatus

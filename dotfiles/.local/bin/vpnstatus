@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Determine the correct command for 'wg', because systemd run it as root, so sudo fails,
+# but we need sudo to use it as a normal user.
+if [[ $EUID -eq 0 ]]; then
+    WG_CMD="wg"
+else
+    WG_CMD="sudo wg"
+fi
+
+# We get the interface (empty if neither Proton or Wireguard) and write it to a .config/vpnstatus file to be displayed in waybar. 
+interface=$($WG_CMD | grep interface | awk '{print $2}')
+
+vpn_file=/home/tristan/.config/vpnstatus
+touch $vpn_file
+
+if [[ $interface == "" ]]; then
+    echo "VPN Down" > $vpn_file
+elif [[ $interface == "Asnieres" ]]; then
+    echo "VPN > Asnieres" > $vpn_file
+elif [[ $interface == pvpn-* ]]; then
+    # Extract everything after "proton-" and capitalize it.
+    region=$(echo $interface | sed 's/^pvpn-//')
+    echo "Proton > $region" > $vpn_file
+else
+    echo "Unknown VPN" > $vpn_file
+fi

@@ -2,20 +2,39 @@
 
 script_name=$(basename "$0")
 
+# The logic :
+# we don't do anything if already connected through Proton.
+#
+# The rest is self explenatory.
 if [[ -z $1 ]]; then
-    echo "Usage: $script_name [up|down]"
+    echo "Usage: $script_name [up|down|status]"
     exit 1
 else
-    case $1 in
-
-        up)
-            nmcli connection up Asnieres
-            ;;
-        down)
-            nmcli connection down Asnieres
-            ;;
-        *)
-            echo "Unknown command."
-            ;;
-    esac
+    interface=$(sudo wg | grep interface | awk '{print $2}')
+    if [[ $interface == pvpn-* ]]; then
+        echo "Already connected through Proton"
+    else
+        case $1 in
+            up)
+                nmcli connection up Asnieres
+                ;;
+            down)
+                nmcli connection down Asnieres
+                ;;
+            status)
+                if [[ $interface == "" ]]; then
+                    echo "VPN disconnected"
+                else
+                    echo "VPN connected to $interface"
+                fi
+                ;;
+            *)
+                echo "Unknown command."
+                echo "Usage: $script_name [up|down|status]"
+                ;;
+        esac
+    fi
 fi
+
+# We write in the .conf/vpnstatus file the current status so it can be displayed in waybar.
+vpnstatus
